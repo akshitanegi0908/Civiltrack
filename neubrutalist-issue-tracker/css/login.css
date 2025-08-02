@@ -1,0 +1,383 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #ff1493;
+  color: #000;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: pageEnter 0.8s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Home Button */
+.home-button-container {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 100;
+  animation: slideInRight 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.home-btn {
+  background: #32cd32;
+  color: #000;
+  padding: 12px 25px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1.1rem;
+  border: 4px solid #000;
+  transform: rotate(-2deg);
+  transition: all 0.2s ease;
+  box-shadow: 4px 4px 0px #000;
+  display: inline-block;
+}
+
+.home-btn:hover {
+  transform: rotate(-2deg) scale(1.1);
+  background: #ffff00;
+  box-shadow: 6px 6px 0px #000;
+  animation: bounce 0.3s ease;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: rotate(-2deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(-2deg) scale(1.15);
+  }
+}
+
+/* Login Container */
+.login-container {
+  background: #ffff00;
+  border: 6px solid #000;
+  padding: 50px;
+  transform: rotate(1deg);
+  box-shadow: 12px 12px 0px #000;
+  max-width: 450px;
+  width: 90%;
+  animation: bounceIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: rotate(1deg) scale(0.3);
+  }
+  50% {
+    transform: rotate(1deg) scale(1.05);
+  }
+  70% {
+    transform: rotate(1deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(1deg) scale(1);
+  }
+}
+
+.login-form {
+  transform: rotate(-1deg);
+}
+
+.login-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #000;
+  text-align: center;
+  margin-bottom: 40px;
+  text-shadow: 3px 3px 0px #ff1493;
+  transform: rotate(2deg);
+  animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%,
+  100% {
+    transform: rotate(2deg) scale(1);
+  }
+  50% {
+    transform: rotate(2deg) scale(1.05);
+  }
+}
+
+/* Form Styles */
+.input-group {
+  margin-bottom: 25px;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.input-group:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.input-group:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+label {
+  display: block;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: #000;
+  margin-bottom: 8px;
+  transform: rotate(-1deg);
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #000;
+  background: #00bfff;
+  border: 4px solid #000;
+  transform: rotate(1deg);
+  transition: all 0.3s ease;
+  box-shadow: 3px 3px 0px #000;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  background: #ff4500;
+  transform: rotate(1deg) scale(1.02);
+  box-shadow: 5px 5px 0px #000;
+  animation: inputFocus 0.3s ease;
+}
+
+@keyframes inputFocus {
+  0% {
+    background: #00bfff;
+  }
+  50% {
+    background: #32cd32;
+  }
+  100% {
+    background: #ff4500;
+  }
+}
+
+/* Submit Button */
+.login-submit-btn {
+  width: 100%;
+  padding: 18px;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: #000;
+  background: #32cd32;
+  border: 5px solid #000;
+  cursor: pointer;
+  transform: rotate(-1deg);
+  transition: all 0.2s ease;
+  box-shadow: 5px 5px 0px #000;
+  margin-top: 20px;
+  animation: slideInUp 0.6s ease-out 0.4s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotate(-1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-1deg);
+  }
+}
+
+.login-submit-btn:hover {
+  background: #ff4500;
+  transform: rotate(-1deg) scale(1.05);
+  box-shadow: 8px 8px 0px #000;
+  animation: buttonPulse 0.3s ease;
+}
+
+@keyframes buttonPulse {
+  0%,
+  100% {
+    transform: rotate(-1deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(-1deg) scale(1.1);
+  }
+}
+
+.login-submit-btn:active {
+  transform: rotate(-1deg) scale(0.98);
+  box-shadow: 2px 2px 0px #000;
+}
+
+/* Register Link */
+.register-link {
+  text-align: center;
+  margin-top: 30px;
+  animation: fadeIn 0.8s ease-out 0.6s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.register-link p {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.register-link a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1.1rem;
+  background: #ff4500;
+  padding: 10px 20px;
+  border: 3px solid #000;
+  transform: rotate(1deg);
+  display: inline-block;
+  transition: all 0.2s ease;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.register-link a:hover {
+  background: #00bfff;
+  transform: rotate(1deg) scale(1.1);
+  box-shadow: 5px 5px 0px #000;
+  animation: linkBounce 0.3s ease;
+}
+
+@keyframes linkBounce {
+  0%,
+  100% {
+    transform: rotate(1deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(1deg) scale(1.15);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-button-container {
+    top: 20px;
+    right: 20px;
+  }
+
+  .home-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+  }
+
+  .login-container {
+    padding: 30px;
+    margin: 20px;
+    transform: rotate(0deg);
+  }
+
+  .login-form {
+    transform: rotate(0deg);
+  }
+
+  .login-title {
+    font-size: 2.5rem;
+    transform: rotate(0deg);
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    transform: rotate(0deg);
+  }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    transform: scale(1.02);
+  }
+
+  .login-submit-btn {
+    transform: rotate(0deg);
+  }
+
+  .login-submit-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .register-link a {
+    transform: rotate(0deg);
+  }
+
+  .register-link a:hover {
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 25px;
+  }
+
+  .login-title {
+    font-size: 2rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    padding: 12px 15px;
+    font-size: 1rem;
+  }
+
+  .login-submit-btn {
+    padding: 15px;
+    font-size: 1.1rem;
+  }
+}

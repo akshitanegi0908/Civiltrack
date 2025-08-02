@@ -1,0 +1,418 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: #00bfff;
+  color: #000;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: pageEnter 0.8s ease-out;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.9) rotate(5deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* Home Button */
+.home-button-container {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 100;
+  animation: slideInRight 0.8s ease-out 0.3s both;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px) rotate(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+.home-btn {
+  background: #ff4500;
+  color: #000;
+  padding: 12px 25px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1.1rem;
+  border: 4px solid #000;
+  transform: rotate(2deg);
+  transition: all 0.2s ease;
+  box-shadow: 4px 4px 0px #000;
+  display: inline-block;
+}
+
+.home-btn:hover {
+  transform: rotate(2deg) scale(1.1);
+  background: #32cd32;
+  box-shadow: 6px 6px 0px #000;
+  animation: bounce 0.3s ease;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: rotate(2deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(2deg) scale(1.15);
+  }
+}
+
+/* Register Container */
+.register-container {
+  background: #32cd32;
+  border: 6px solid #000;
+  padding: 40px;
+  transform: rotate(-1deg);
+  box-shadow: 12px 12px 0px #000;
+  max-width: 500px;
+  width: 90%;
+  animation: bounceIn 0.8s ease-out 0.2s both;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: rotate(-1deg) scale(0.3) translateY(-50px);
+  }
+  50% {
+    transform: rotate(-1deg) scale(1.05) translateY(10px);
+  }
+  70% {
+    transform: rotate(-1deg) scale(0.9) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-1deg) scale(1) translateY(0);
+  }
+}
+
+.register-form {
+  transform: rotate(1deg);
+}
+
+.register-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #000;
+  text-align: center;
+  margin-bottom: 35px;
+  text-shadow: 3px 3px 0px #ff1493;
+  transform: rotate(-2deg);
+  animation: titleWobble 3s ease-in-out infinite;
+}
+
+@keyframes titleWobble {
+  0%,
+  100% {
+    transform: rotate(-2deg) scale(1);
+  }
+  25% {
+    transform: rotate(-1deg) scale(1.02);
+  }
+  50% {
+    transform: rotate(-3deg) scale(1.05);
+  }
+  75% {
+    transform: rotate(-1deg) scale(1.02);
+  }
+}
+
+/* Form Styles */
+.input-group {
+  margin-bottom: 20px;
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.input-group:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.input-group:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.input-group:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.input-group:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px) rotate(-5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+}
+
+label {
+  display: block;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #000;
+  margin-bottom: 6px;
+  transform: rotate(1deg);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  background: #ffff00;
+  border: 4px solid #000;
+  transform: rotate(-1deg);
+  transition: all 0.3s ease;
+  box-shadow: 3px 3px 0px #000;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  background: #ff1493;
+  transform: rotate(-1deg) scale(1.02);
+  box-shadow: 5px 5px 0px #000;
+  animation: inputFocus 0.4s ease;
+}
+
+@keyframes inputFocus {
+  0% {
+    background: #ffff00;
+    transform: rotate(-1deg) scale(1);
+  }
+  50% {
+    background: #00bfff;
+    transform: rotate(-1deg) scale(1.05);
+  }
+  100% {
+    background: #ff1493;
+    transform: rotate(-1deg) scale(1.02);
+  }
+}
+
+/* Submit Button */
+.register-submit-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #000;
+  background: #ff4500;
+  border: 5px solid #000;
+  cursor: pointer;
+  transform: rotate(1deg);
+  transition: all 0.2s ease;
+  box-shadow: 5px 5px 0px #000;
+  margin-top: 15px;
+  animation: slideInUp 0.6s ease-out 0.5s both;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(1deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(1deg);
+  }
+}
+
+.register-submit-btn:hover {
+  background: #00bfff;
+  transform: rotate(1deg) scale(1.05);
+  box-shadow: 8px 8px 0px #000;
+  animation: buttonPulse 0.3s ease;
+}
+
+@keyframes buttonPulse {
+  0%,
+  100% {
+    transform: rotate(1deg) scale(1.05);
+  }
+  50% {
+    transform: rotate(1deg) scale(1.1);
+  }
+}
+
+.register-submit-btn:active {
+  transform: rotate(1deg) scale(0.98);
+  box-shadow: 2px 2px 0px #000;
+}
+
+/* Login Link */
+.login-link {
+  text-align: center;
+  margin-top: 25px;
+  animation: fadeIn 0.8s ease-out 0.7s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-link p {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #000;
+  margin-bottom: 8px;
+}
+
+.login-link a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 1rem;
+  background: #ffff00;
+  padding: 8px 18px;
+  border: 3px solid #000;
+  transform: rotate(-1deg);
+  display: inline-block;
+  transition: all 0.2s ease;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.login-link a:hover {
+  background: #ff1493;
+  transform: rotate(-1deg) scale(1.1);
+  box-shadow: 5px 5px 0px #000;
+  animation: linkBounce 0.3s ease;
+}
+
+@keyframes linkBounce {
+  0%,
+  100% {
+    transform: rotate(-1deg) scale(1.1);
+  }
+  50% {
+    transform: rotate(-1deg) scale(1.15);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-button-container {
+    top: 20px;
+    right: 20px;
+  }
+
+  .home-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    transform: rotate(0deg);
+  }
+
+  .home-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .register-container {
+    padding: 30px;
+    margin: 20px;
+    transform: rotate(0deg);
+  }
+
+  .register-form {
+    transform: rotate(0deg);
+  }
+
+  .register-title {
+    font-size: 2.5rem;
+    transform: rotate(0deg);
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"] {
+    transform: rotate(0deg);
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="tel"]:focus,
+  input[type="password"]:focus {
+    transform: scale(1.02);
+  }
+
+  .register-submit-btn {
+    transform: rotate(0deg);
+  }
+
+  .register-submit-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .login-link a {
+    transform: rotate(0deg);
+  }
+
+  .login-link a:hover {
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 25px;
+  }
+
+  .register-title {
+    font-size: 2rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"] {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .register-submit-btn {
+    padding: 14px;
+    font-size: 1.1rem;
+  }
+
+  .input-group {
+    margin-bottom: 18px;
+  }
+}
