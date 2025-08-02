@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaarthiX - India's Real-Time Civic Reporter</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #374151;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            background: #f59e0b;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+        }
+
+        /* About Section */
+        .about {
+            padding: 4rem 0;
+            background: #f9fafb;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #1f2937;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 2.5rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            height: 100vh;
+            padding-top: 80px;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .map-legend {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        /* Issue List */
+        .issue-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .issue-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .issue-item:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .issue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-category {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .issue-time {
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+
+        .issue-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-location {
+            color: #6b7280;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .issue-location i {
+            margin-right: 0.25rem;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 2rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            border-color: #2563eb;
+            background: #f8fafc;
+        }
+
+        .image-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 0.5rem;
+        }
+
+        .location-info {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .location-coords {
+            font-family: monospace;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .alert {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: 200px;
+            }
+
+            .map-container {
+                height: calc(100vh - 280px);
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
+
+        /* User Menu */
+        .user-menu {
+            position: relative;
+            display: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            display: none;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background: #f9fafb;
+        }
+
+        .category-colors {
+            pothole: '#ef4444',
+            garbage: '#f59e0b',
+            streetlight: '#eab308',
+            traffic: '#06b6d4',
+            water: '#3b82f6',
+            other: '#8b5cf6'
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">SaarthiX</a>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showDashboard()">Dashboard</a></li>
+                <li><a href="#" onclick="showHowItWorks()">How It Works</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="auth-buttons" id="authButtons">
+                <a href="#" class="btn btn-secondary" onclick="showAuthModal('login')">Login</a>
+                <a href="#" class="btn btn-primary" onclick="showAuthModal('register')">Register</a>
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" onclick="toggleUserDropdown()" id="userAvatar">U</div>
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="#" onclick="showProfile()">Profile</a>
+                    <a href="#" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landingPage">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-container">
+                <h1>Report. Track. Transform.</h1>
+                <p>Join thousands of citizens making India cleaner and safer through real-time civic issue reporting</p>
+                <a href="#" class="cta-button" onclick="showDashboard()">Report Now</a>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="about-container">
+                <h2>Making Civic Engagement Simple</h2>
+                <p>SaarthiX empowers every citizen to be a change-maker in their community</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Geo-Tagged Reporting</h3>
+                        <p>Report issues with precise location data for faster resolution</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-camera"></i>
+                        <h3>Photo Evidence</h3>
+                        <p>Attach photos to provide clear evidence of civic issues</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Real-Time Tracking</h3>
+                        <p>Track the status of your reports and see community impact</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works">
+            <div class="about-container">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Spot an Issue</h3>
+                        <p>Notice a pothole, broken streetlight, or garbage pile in your area</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Report Instantly</h3>
+                        <p>Take a photo, add description, and submit with auto-location</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Authorities Notified</h3>
+                        <p>Local authorities receive your report with all details</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Track Progress</h3>
+                        <p>Monitor resolution status and see community impact</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="about-container">
+                <p>&copy; 2024 SaarthiX. Making India better, one report at a time.</p>
+                <div style="margin-top: 1rem;">
+                    <a href="#" style="color: white; margin: 0 1rem;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: white; margin: 0 1rem;"><i class="fab fa-facebook"></i></a>
+                    <a href="#" style="color: white; margin: 0 1rem;"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="dashboard-container">
+            <div class="sidebar">
+                <h3 style="margin-bottom: 1rem;">Recent Reports</h3>
+                <div class="form-group">
+                    <select class="form-input" id="categoryFilter" onchange="filterIssues()">
+                        <option value="">All Categories</option>
+                        <option value="pothole">Potholes</option>
+                        <option value="garbage">Garbage</option>
+                        <option value="streetlight">Street Lights</option>
+                        <option value="traffic">Traffic Issues</option>
+                        <option value="water">Water Problems</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="issue-list" id="issueList">
+                    <!-- Issues will be populated here -->
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+                
+                <div class="map-controls">
+                    <button class="btn btn-primary" onclick="showReportModal()">
+                        <i class="fas fa-plus"></i> Report Issue
+                    </button>
+                </div>
+                
+                <div class="map-legend">
+                    <h4 style="margin-bottom: 0.5rem;">Issue Types</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #ef4444;"></div>
+                        <span>Potholes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f59e0b;"></div>
+                        <span>Garbage</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #eab308;"></div>
+                        <span>Street Lights</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #06b6d4;"></div>
+                        <span>Traffic</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3b82f6;"></div>
+                        <span>Water Issues</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #8b5cf6;"></div>
+                        <span>Other</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="authTitle">Login</h2>
+                <button class="close-btn" onclick="closeModal('authModal')">&times;</button>
+            </div>
+            
+            <div id="authAlert"></div>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="authEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="authPassword" required>
+                </div>
+                
+                <div class="form-group" id="confirmPasswordGroup" style="display: none;">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="confirmPassword">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+                    <span id="authButtonText">Login</span>
+                    <span id="authLoading" class="loading" style="display: none; margin-left: 0.5rem;"></span>
+                </button>
+            </form>
+            
+            <div style="text-align: center; margin-bottom: 1rem;">
+                <span id="authSwitchText">Don't have an account?</span>
+                <a href="#" id="authSwitchLink" onclick="switchAuthMode()">Register</a>
+            </div>
+            
+            <button class="btn btn-secondary" style="width: 100%;" onclick="continueAsGuest()">
+                Continue as Guest
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Issue Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Report an Issue</h2>
+                <button class="close-btn" onclick="closeModal('reportModal')">&times;</button>
+            </div>
+            
+            <div id="reportAlert"></div>
+            
+            <form id="reportForm">
+                <div class="form-group">
+                    <label class="form-label">Issue Title</label>
+                    <input type="text" class="form-input" id="issueTitle" required placeholder="Brief description of the issue">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-input" id="issueCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="pothole">Pothole</option>
+                        <option value="garbage">Garbage/Waste</option>
+                        <option value="streetlight">Street Light</option>
+                        <option value="traffic">Traffic Issue</option>
+                        <option value="water">Water Problem</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-input form-textarea" id="issueDescription" required placeholder="Provide detailed description of the issue"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Photo Evidence</label>
+                    <div class="file-upload">
+                        <input type="file" id="issuePhoto" accept="image/*" onchange="previewImage(this)">
+                        <label for="issuePhoto" class="file-upload-label">
+                            <i class="fas fa-camera" style="font-size: 2rem; color: #6b7280; margin-bottom: 0.5rem;"></i>
+                            <div>Click to upload photo</div>
+                            <div style="font-size: 0.875rem; color: #6b7280;">JPG, PNG up to 5MB</div>
+                        </label>
+                    </div>
+                    <div id="imagePreview" class="image-preview"></div>
+                </div>
+                
+                <div class="location-info">
+                    <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt"></i> Location</h4>
+                    <div id="locationStatus">Getting your location...</div>
+                    <div id="locationCoords" class="location-coords"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span id="reportButtonText">Submit Report</span>
+                    <span id="reportLoading" class="loading" style="display: none; margin-left: 0.5rem;"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Global variables
+        let map;
+        let userLocation = null;
+        let currentUser = null;
+        let isGuest = false;
+        let authMode = 'login';
+        let issues = [];
+        let markers = [];
+
+        // Sample data for Indian cities
+        const sampleIssues = [
+            {
+                id: 1,
+                title: "Large pothole on MG Road",
+                description: "Deep pothole causing traffic issues and vehicle damage",
+                category: "pothole",
+                location: { lat: 28.6139, lng: 77.2090 }, // Delhi
+                address: "MG Road, Connaught Place, New Delhi",
+                photo: "/placeholder.svg?height=200&width=300",
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                status: "reported"
+            },
+            {
+                id: 2,
+                title: "Garbage pile near bus stop",
+                description: "Large accumulation of garbage causing health hazards",
+                category: "garbage",
+                location: { lat: 18.5204, lng: 73.8567 }, // Pune
+                address: "FC Road, Pune, Maharashtra",
+                photo: "/placeholder.svg?height=200&width=300",
+                timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
+                status: "in-progress"
+            },
+            {
+                id: 3,
+                title: "Street light not working",
+                description: "Street light has been non-functional for a week",
+                category: "streetlight",
+                location: { lat: 12.9716, lng: 77.5946 }, // Bangalore
+                address: "Brigade Road, Bangalore, Karnataka",
+                photo: "/placeholder.svg?height=200&width=300",
+                timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                status: "reported"
+            },
+            {
+                id: 4,
+                title: "Traffic signal malfunction",
+                description: "Traffic light stuck on red, causing major congestion",
+                category: "traffic",
+                location: { lat: 19.0760, lng: 72.8777 }, // Mumbai
+                address: "Linking Road, Bandra West, Mumbai",
+                photo: "/placeholder.svg?height=200&width=300",
+                timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
+                status: "reported"
+            },
+            {
+                id: 5,
+                title: "Water leakage from main pipe",
+                description: "Continuous water wastage from broken municipal pipe",
+                category: "water",
+                location: { lat: 22.5726, lng: 88.3639 }, // Kolkata
+                address: "Park Street, Kolkata, West Bengal",
+                photo: "/placeholder.svg?height=200&width=300",
+                timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
+                status: "in-progress"
+            }
+        ];
+
+        // Category colors
+        const categoryColors = {
+            pothole: '#ef4444',
+            garbage: '#f59e0b',
+            streetlight: '#eab308',
+            traffic: '#06b6d4',
+            water: '#3b82f6',
+            other: '#8b5cf6'
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load sample issues
+            issues = [...sampleIssues];
+            
+            // Check for saved user session
+            const savedUser = localStorage.getItem('saarthix_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateAuthUI();
+            }
+        });
+
+        // Authentication functions
+        function showAuthModal(mode) {
+            authMode = mode;
+            const modal = document.getElementById('authModal');
+            const title = document.getElementById('authTitle');
+            const buttonText = document.getElementById('authButtonText');
+            const switchText = document.getElementById('authSwitchText');
+            const switchLink = document.getElementById('authSwitchLink');
+            const confirmGroup = document.getElementById('confirmPasswordGroup');
+            
+            if (mode === 'login') {
+                title.textContent = 'Login';
+                buttonText.textContent = 'Login';
+                switchText.textContent = "Don't have an account?";
+                switchLink.textContent = 'Register';
+                confirmGroup.style.display = 'none';
+            } else {
+                title.textContent = 'Register';
+                buttonText.textContent = 'Register';
+                switchText.textContent = 'Already have an account?';
+                switchLink.textContent = 'Login';
+                confirmGroup.style.display = 'block';
+            }
+            
+            modal.style.display = 'block';
+            clearAuthAlert();
+        }
+
+        function switchAuthMode() {
+            authMode = authMode === 'login' ? 'register' : 'login';
+            showAuthModal(authMode);
+        }
+
+        function continueAsGuest() {
+            isGuest = true;
+            closeModal('authModal');
+            showDashboard();
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+            const userAvatar = document.getElementById('userAvatar');
+            
+            if (currentUser || isGuest) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'block';
+                
+                if (currentUser) {
+                    userAvatar.textContent = currentUser.email.charAt(0).toUpperCase();
+                } else {
+                    userAvatar.textContent = 'G';
+                }
+            } else {
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function logout() {
+            currentUser = null;
+            isGuest = false;
+            localStorage.removeItem('saarthix_user');
+            updateAuthUI();
+            showLandingPage();
+            document.getElementById('userDropdown').style.display = 'none';
+        }
+
+        // Form submission
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Show loading
+            document.getElementById('authLoading').style.display = 'inline-block';
+            document.getElementById('authButtonText').style.display = 'none';
+            
+            // Simulate API call
+            setTimeout(() => {
+                if (authMode === 'register' && password !== confirmPassword) {
+                    showAuthAlert('Passwords do not match', 'error');
+                    hideAuthLoading();
+                    return;
+                }
+                
+                // Simulate successful auth
+                currentUser = { email, id: Date.now() };
+                localStorage.setItem('saarthix_user', JSON.stringify(currentUser));
+                
+                hideAuthLoading();
+                closeModal('authModal');
+                showDashboard();
+                updateAuthUI();
+                showAuthAlert('Successfully ' + (authMode === 'login' ? 'logged in' : 'registered') + '!', 'success');
+            }, 1500);
+        });
+
+        function hideAuthLoading() {
+            document.getElementById('authLoading').style.display = 'none';
+            document.getElementById('authButtonText').style.display = 'inline';
+        }
+
+        function showAuthAlert(message, type) {
+            const alert = document.getElementById('authAlert');
+            alert.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => clearAuthAlert(), 5000);
+        }
+
+        function clearAuthAlert() {
+            document.getElementById('authAlert').innerHTML = '';
+        }
+
+        // Navigation functions
+        function showLandingPage() {
+            document.getElementById('landingPage').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            
+            // Initialize map if not already done
+            if (!map) {
+                initMap();
+            }
+            
+            renderIssueList();
+        }
+
+        function showHowItWorks() {
+            document.querySelector('.how-it-works').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Map functions
+        function initMap() {
+            // Initialize map centered on India
+            map = L.map('map').setView([20.5937, 78.9629], 5);
+            
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Add sample markers
+            addIssueMarkers();
+            
+            // Get user location
+            getUserLocation();
+        }
+
+        function addIssueMarkers() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            issues.forEach(issue => {
+                const color = categoryColors[issue.category] || '#8b5cf6';
+                
+                const marker = L.circleMarker([issue.location.lat, issue.location.lng], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.7,
+                    radius: 8
+                }).addTo(map);
+                
+                const popupContent = `
+                    <div style="min-width: 200px;">
+                        <h4 style="margin-bottom: 0.5rem;">${issue.title}</h4>
+                        <p style="margin-bottom: 0.5rem; color: #6b7280; font-size: 0.875rem;">${issue.description}</p>
+                        <div style="margin-bottom: 0.5rem;">
+                            <span style="background: ${color}; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                                ${issue.category.toUpperCase()}
+                            </span>
+                        </div>
+                        <p style="color: #6b7280; font-size: 0.75rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-clock"></i> ${formatTimeAgo(issue.timestamp)}
+                        </p>
+                        <p style="color: #6b7280; font-size: 0.75rem;">
+                            <i class="fas fa-map-marker-alt"></i> ${issue.address}
+                        </p>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+                markers.push(marker);
+            });
+        }
+
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        // Add user location marker
+                        L.marker([userLocation.lat, userLocation.lng], {
+                            icon: L.divIcon({
+                                className: 'user-location-marker',
+                                html: '<div style="background: #2563eb; width: 12px; height: 12px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);"></div>',
+                                iconSize: [18, 18],
+                                iconAnchor: [9, 9]
+                            })
+                        }).addTo(map).bindPopup('Your Location');
+                        
+                        // Center map on user location
+                        map.setView([userLocation.lat, userLocation.lng], 13);
+                    },
+                    function(error) {
+                        console.log('Geolocation error:', error);
+                    }
+                );
+            }
+        }
+
+        // Issue reporting functions
+        function showReportModal() {
+            if (!currentUser && !isGuest) {
+                showAuthModal('login');
+                return;
+            }
+            
+            document.getElementById('reportModal').style.display = 'block';
+            clearReportForm();
+            getLocationForReport();
+        }
+
+        function getLocationForReport() {
+            const locationStatus = document.getElementById('locationStatus');
+            const locationCoords = document.getElementById('locationCoords');
+            
+            locationStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting your location...';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        
+                        locationStatus.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> Location detected';
+                        locationCoords.textContent = `${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`;
+                    },
+                    function(error) {
+                        locationStatus.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> Unable to get location';
+                        locationCoords.textContent = 'Please enable location services';
+                    }
+                );
+            }
+        }
+
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.innerHTML = '';
+            }
+        }
+
+        // Report form submission
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!userLocation) {
+                showReportAlert('Please enable location services to report an issue', 'error');
+                return;
+            }
+            
+            const title = document.getElementById('issueTitle').value;
+            const category = document.getElementById('issueCategory').value;
+            const description = document.getElementById('issueDescription').value;
+            const photo = document.getElementById('issuePhoto').files[0];
+            
+            // Show loading
+            document.getElementById('reportLoading').style.display = 'inline-block';
+            document.getElementById('reportButtonText').style.display = 'none';
+            
+            // Simulate API call
+            setTimeout(() => {
+                const newIssue = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    category,
+                    location: userLocation,
+                    address: 'Current Location', // In real app, reverse geocode this
+                    photo: photo ? URL.createObjectURL(photo) : `/placeholder.svg?height=200&width=300&query=${category} issue`,
+                    timestamp: new Date(),
+                    status: 'reported'
+                };
+                
+                issues.unshift(newIssue);
+                addIssueMarkers();
+                renderIssueList();
+                
+                hideReportLoading();
+                showReportAlert('Issue reported successfully!', 'success');
+                
+                setTimeout(() => {
+                    closeModal('reportModal');
+                }, 2000);
+            }, 2000);
+        });
+
+        function hideReportLoading() {
+            document.getElementById('reportLoading').style.display = 'none';
+            document.getElementById('reportButtonText').style.display = 'inline';
+        }
+
+        function showReportAlert(message, type) {
+            const alert = document.getElementById('reportAlert');
+            alert.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => clearReportAlert(), 5000);
+        }
+
+        function clearReportAlert() {
+            document.getElementById('reportAlert').innerHTML = '';
+        }
+
+        function clearReportForm() {
+            document.getElementById('reportForm').reset();
+            document.getElementById('imagePreview').innerHTML = '';
+            clearReportAlert();
+        }
+
+        // Issue list functions
+        function renderIssueList() {
+            const issueList = document.getElementById('issueList');
+            const filter = document.getElementById('categoryFilter').value;
+            
+            const filteredIssues = filter ? issues.filter(issue => issue.category === filter) : issues;
+            
+            issueList.innerHTML = filteredIssues.map(issue => `
+                <div class="issue-item" onclick="focusOnIssue(${issue.id})">
+                    <div class="issue-header">
+                        <span class="issue-category" style="background: ${categoryColors[issue.category]}20; color: ${categoryColors[issue.category]};">
+                            ${issue.category.toUpperCase()}
+                        </span>
+                        <span class="issue-time">${formatTimeAgo(issue.timestamp)}</span>
+                    </div>
+                    <div class="issue-title">${issue.title}</div>
+                    <div class="issue-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${issue.address}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterIssues() {
+            renderIssueList();
+        }
+
+        function focusOnIssue(issueId) {
+            const issue = issues.find(i => i.id === issueId);
+            if (issue) {
+                map.setView([issue.location.lat, issue.location.lng], 16);
+                
+                // Find and open the marker popup
+                const marker = markers.find(m => 
+                    m.getLatLng().lat === issue.location.lat && 
+                    m.getLatLng().lng === issue.location.lng
+                );
+                if (marker) {
+                    marker.openPopup();
+                }
+            }
+        }
+
+        // Utility functions
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = now - timestamp;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 60) {
+                return `${minutes}m ago`;
+            } else if (hours < 24) {
+                return `${hours}h ago`;
+            } else {
+                return `${days}d ago`;
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Close user dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const userMenu = document.getElementById('userMenu');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (!userMenu.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+    </script>
+</body>
+</html>
